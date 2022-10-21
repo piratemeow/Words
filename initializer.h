@@ -2,7 +2,7 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_timer.h>
 #include <stdio.h>
-
+#include "constants.h"
 
 bool game_intialization(const char *title, int x_pos, int y_pos,int width, int height)
 {
@@ -16,7 +16,7 @@ bool game_intialization(const char *title, int x_pos, int y_pos,int width, int h
 
     // Creating new window
 
-    SDL_Window *window = NULL;
+    //SDL_Window *window = NULL;
     window = SDL_CreateWindow(title, x_pos, y_pos, width, height, SDL_WINDOW_SHOWN);
     
     // If window creating fails
@@ -29,7 +29,7 @@ bool game_intialization(const char *title, int x_pos, int y_pos,int width, int h
 
     // Creating renderer
 
-    SDL_Renderer *renderer = NULL;
+    //SDL_Renderer *renderer = NULL;
     Uint32 render_flags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC;
     renderer = SDL_CreateRenderer(window, -1, render_flags);
 
@@ -48,7 +48,7 @@ bool game_intialization(const char *title, int x_pos, int y_pos,int width, int h
         return 0;
     }
 
-    SDL_Surface *surface = NULL;
+    
     surface = IMG_Load("6.png");
 
     if (!surface)
@@ -73,22 +73,22 @@ bool game_intialization(const char *title, int x_pos, int y_pos,int width, int h
         return 0;
     }
 
-    SDL_Rect dest;
-    SDL_QueryTexture(tex,NULL,NULL,&dest.w,&dest.h);
+    SDL_Rect dest[2];
+    SDL_QueryTexture(tex,NULL,NULL,&dest[0].w,&dest[0].h);
 
-    dest.w=(int) dest.w *1;
-    dest.h = (int) dest.h *1;
-    dest.x= (int) 900;
-    dest.y = 0 ;
+    dest[0].w=(int) dest[0].w *1;
+    dest[0].h = (int) dest[0].h *1;
+    dest[0].x= (int) 900;
+    dest[0].y = 0 ;
 
     SDL_RenderClear(renderer);
-    SDL_RenderCopy(renderer,tex,NULL,&dest);
+    SDL_RenderCopy(renderer,tex,NULL,&dest[0]);
     SDL_RenderPresent(renderer);
 
 
-    SDL_Delay(15000);
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
+    // SDL_Delay(15000);
+    // SDL_DestroyRenderer(renderer);
+    // SDL_DestroyWindow(window);
 
     return 1;
 
