@@ -60,31 +60,35 @@ void logic()
 	{
 		fscanf(fil,"%s",words[i]);
 	}
-    printf("%d",word_count);
-    int dash_number = rand() % word_count;
-    SDL_Texture *dashtex[dash_number];
+  //  printf("%d",word_count);
+
+	
+    int dash_number = strlen(words[rand()%word_count]);
+    SDL_Texture *dashtex = NULL;
 
 
-    SDL_Rect dash[dash_number];
-    
+    SDL_Rect dash[dash_number] ;
+    surface = IMG_Load("underscor_.png");
+	dashtex = SDL_CreateTextureFromSurface(renderer,surface);
+	SDL_FreeSurface(surface);
+	SDL_QueryTexture(dashtex,NULL,NULL,&dash[0].w,&dash[0].h);
+	int dash_x_pos = 10;
+	int dash_width = dash[0].w *.3;
     for (int i=0;i<dash_number;i++)
     {
-        surface = IMG_Load("underscor.png");
-
-        dashtex[i] = SDL_CreateTextureFromSurface(renderer,surface);
-        //SDL_FreeSurface(surface);
-
-        SDL_QueryTexture(dashtex[i],NULL,NULL,&dash[i].w,&dash[i].h);
-
-        dash[i].w=(int) dash[i].w * 1 ;
-        dash[i].h = (int) dash[i].h *1;
-        dash[i].x= (int) 10*i+10;
+        dash[i].w = dash_width;
+        dash[i].h = (int) dash[0].h;
+        dash[i].x = dash_x_pos;
+		dash_x_pos += dash[i].w;
         dash[i].y = 10 ;
-        SDL_RenderClear(renderer);
-        SDL_RenderCopy(renderer,dashtex[i],NULL,&dash[i]);
-        SDL_RenderPresent(renderer);
+        // SDL_RenderClear(renderer);
+        SDL_RenderCopy(renderer,dashtex,NULL,&dash[i]);
+         //SDL_RenderPresent(renderer);
     }
-    //  SDL_RenderClear(renderer);
+	
+	printf("%d\n",dash_number);
+	SDL_RenderPresent(renderer);
+    SDL_RenderClear(renderer);
     //     SDL_RenderCopy(renderer,dashtex[i],NULL,&dash[i]);
     //     SDL_RenderPresent(renderer);
 
