@@ -310,6 +310,10 @@ void logic()
 	if (correct_ch_count==dash_number)
 		{
 			printf ("Yes\n");
+
+			 SDL_RenderCopy(renderer,Next_round,NULL,&next_round);
+			 //SDL_RenderPresent(renderer);
+			// SDL_Delay(5000);
 			
 			
 		}
@@ -321,33 +325,8 @@ void logic()
 	
 	}
 
-	// cout<<correct_ch_count<<" "<<character_count<<endl;
-	// if (correct_ch_count==dash_number)
-	// 	{
-	// 		printf ("Yes\n");
-			
-			
-	// 	}
-	// else
-	// 	printf ("No\n");
-
-	//  SDL_RenderCopy(renderer,Next_round,NULL,&next_round);
-	// 		SDL_RenderPresent(renderer);
-			//SDL_Delay(2000);
-	quit=0;
-	// SDL_RenderPresent(renderer);
-
-	//printf("abc");
-	//SDL_RenderPresent(renderer);
-
 	
-	
-	// SDL_RenderPresent(renderer); 
- 
-   // SDL_RenderClear(renderer);
-    //     SDL_RenderCopy(renderer,dashtex[i],NULL,&dash[i]);
-    //     SDL_RenderPresent(renderer);
-
+    SDL_RenderPresent(renderer);
     return ;
 
 }
