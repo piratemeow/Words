@@ -133,14 +133,47 @@ int validity_check( char word[], char c, int position_array[])
 	return count;
 }
 
-// bool next_step()
-// {
+bool next_step()
+{
 
-// }
+	// SDL_Event mouse;
+	int x,y;
+	while (game)
+	{
+		SDL_PollEvent(&mouse);
+		if(mouse.type==SDL_QUIT)
+		{
+			game = 0;
+			return 0;
+		}
+		if (mouse.type==SDL_MOUSEMOTION)
+		{
+			
+			SDL_GetMouseState(&x,&y);
+			//cout<<x<<" "<<y<<endl;
+		}
+			if (SDL_MOUSEBUTTONUP==mouse.type)
+			{
+				if (SDL_BUTTON_LEFT==mouse.button.button){
+				
+				//return 1;
+				if (x>=300 && x<=(300+400) && y<=(500+100) && y>=500)
+				{
+					cout<<"g\n";
+					return 1;
+				}
+				}
+			}
+		}
+	
+	return 0;
+
+}
 
 void logic()
 {
-    srand(time(0));
+	 
+	srand(time(0));
 	FILE *fil;
 	fil=fopen("words","r");
 	if (fil==NULL)
@@ -195,32 +228,7 @@ void logic()
 	//SDL_Event c; 
 	
 	 SDL_RenderPresent(renderer);
-	//if(SDL_PollEvent(&c)){
-
-		
-			// if(c.type==SDL_KEYUP)
-			// {
-			// 	switch (c.key.keysym.sym)
-			// 	{
-			// 	case SDLK_a:
-			// 	{
-			// 		SDL_RenderPresent(renderer); 
-			// 		printf("hello\n");
-			// 		cls = true;
-			// 		break;
-			// 	}
-			// 	}	
-			// 	//SDL_Quit();
-			// 	//SDL_DestroyWindow(window);
-			// }
-
-			// if (sdltocharacter(c)=='a')
-			// 	SDL_RenderPresent(renderer);
-
-
-	//}
 	
-
 	int character_count = 0;
 	int correct_ch_count = 0;
 	int position_array[dash_number];
@@ -238,13 +246,16 @@ void logic()
 	printf ("\n");
 	//string s;
 	bool q=1;
+	
 	while (q)
 	{    //character_count <=dash_number
 		if (SDL_PollEvent(&c)!=0){
 		if(c.type==SDL_QUIT )
 			{
-				quit =0;
+				
 				q=0;
+				game = 0;
+				break;
 				
 			}
 		else if (c.type==SDL_KEYUP)
@@ -280,11 +291,9 @@ void logic()
 				{
 					if (position_array[i]!=-1)
 					{
-						// surface = TTF_RenderText_Solid(font,&ch,{0,0,0});
-						// SDL_Texture *chf = SDL_CreateTextureFromSurface(renderer,surface);
-    					// SDL_FreeSurface(surface);
+						
 						SDL_RenderCopy(renderer,chf,NULL,&dash[position_array[i]]);
-						//character_count ++;
+						
 						correct_ch_count++;
 					}
 				}
@@ -305,28 +314,27 @@ void logic()
 			{
 				q=0;
 			}
-		cout<<correct_ch_count<<" "<<character_count<<endl;
-
-	if (correct_ch_count==dash_number)
-		{
-			printf ("Yes\n");
-
-			 SDL_RenderCopy(renderer,Next_round,NULL,&next_round);
-			 //SDL_RenderPresent(renderer);
-			// SDL_Delay(5000);
-			
-			
-		}
-	else
-		printf ("No\n");
+		
 		
 		}
 	}
 	
 	}
+    cout<<correct_ch_count<<" "<<character_count<<endl;
 
-	
+	if (correct_ch_count==dash_number)
+	{
+		printf ("Yes\n");
+	   	
+					
+	}
+	else
+		printf ("No\n");
+	SDL_RenderCopy(renderer,Next_round,NULL,&next_round);
     SDL_RenderPresent(renderer);
+	
+	
+	//goto hell;
     return ;
 
 }
