@@ -54,11 +54,11 @@ bool game_intialization(const char *title, int x_pos, int y_pos,int width, int h
         return 0;
     }
     
-   
-   
+   TTF_Init();
+   TTF_Font *font = TTF_OpenFont("montserrat/Montserrat-Medium.otf",20);
     
-    surface = IMG_Load("background.png");
-   // surface = IMG_Load("0.png");
+   
+surface = IMG_Load("background.png");
     if (!surface)
     {
         printf ("ERROR SURFACING IMAGE\n");
@@ -82,12 +82,8 @@ bool game_intialization(const char *title, int x_pos, int y_pos,int width, int h
     // }
 
     // SDL_Texture *back ;
-   
-    back = SDL_CreateTextureFromSurface (renderer,surface);
-    SDL_FreeSurface(surface);
-    SDL_RenderCopy(renderer,back,NULL,NULL);
-    SDL_RenderPresent (renderer);
-
+    
+    
     // SDL_Texture * tex[7];
     surface = IMG_Load("0.png");
     tex[0] = SDL_CreateTextureFromSurface(renderer,surface);
@@ -127,8 +123,8 @@ bool game_intialization(const char *title, int x_pos, int y_pos,int width, int h
 
     for (int i=0; i<7 ;i++)
     {
-    dest[i].w=(int) dest[i].w *1;
-    dest[i].h = (int) dest[i].h *1;
+    dest[i].w=(int) dest[0].w *1;
+    dest[i].h = (int) dest[0].h *1;
     dest[i].x= (int) 750;
     dest[i].y = 0 ;
     
@@ -136,10 +132,19 @@ bool game_intialization(const char *title, int x_pos, int y_pos,int width, int h
 
    // SDL_RenderClear(renderer); this was changed
 
-   SDL_RenderCopy(renderer,tex[0],NULL,&dest[0]);
+    SDL_RenderCopy(renderer,tex[0],NULL,&dest[0]);
 
+    surface = TTF_RenderText_Solid(font,"NEXT ROUND",{0,0,0});
 
-    
+    Next_round = SDL_CreateTextureFromSurface (renderer,surface);
+
+    next_round.w = 400;
+    next_round.h = 100;
+    next_round.x = 300;
+    next_round.y = 500;
+
+   // SDL_RenderCopy(renderer,Next_round,NULL,&next_round);
+    SDL_FreeSurface(surface);
     //SDL_RenderPresent(renderer);
 
 
@@ -148,5 +153,14 @@ bool game_intialization(const char *title, int x_pos, int y_pos,int width, int h
     // SDL_DestroyWindow(window);
 
     return 1;
+}
 
+
+void main_render()
+{
+    surface = IMG_Load("background.png");
+    back = SDL_CreateTextureFromSurface (renderer,surface);
+    SDL_FreeSurface(surface);
+    SDL_RenderCopy(renderer,back,NULL,NULL);
+    SDL_RenderPresent (renderer);
 }
