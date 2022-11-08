@@ -35,7 +35,6 @@ bool game_intialization(const char *title, int x_pos, int y_pos,int width, int h
 
     // Creating renderer
 
-    //SDL_Renderer *renderer = NULL;
     Uint32 render_flags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC;
     renderer = SDL_CreateRenderer(window, -1, render_flags);
 
@@ -69,70 +68,7 @@ surface = IMG_Load("background.png");
     }
     
     
-
-    // if (!tex)
-    // {
-    //     printf("ERROR CREATING TEXTURE\n");
-
-    //     SDL_DestroyRenderer(renderer);
-    //     SDL_DestroyWindow(window);
-    //     SDL_Quit();
-    //     return 0;
-
-    // }
-
-    // SDL_Texture *back ;
-    
-    
-    // SDL_Texture * tex[7];
-    surface = IMG_Load("0.png");
-    tex[0] = SDL_CreateTextureFromSurface(renderer,surface);
-    SDL_FreeSurface(surface);
-
-    surface = IMG_Load("1.png");
-    tex[1] = SDL_CreateTextureFromSurface(renderer,surface);
-    SDL_FreeSurface(surface);
-
-    surface = IMG_Load("2.png");
-    tex[2] = SDL_CreateTextureFromSurface(renderer,surface);
-    SDL_FreeSurface(surface);
-
-    surface = IMG_Load("3.png");
-    tex[3] = SDL_CreateTextureFromSurface(renderer,surface);
-    SDL_FreeSurface(surface);
-
-    surface = IMG_Load("4.png");
-    tex[4] = SDL_CreateTextureFromSurface(renderer,surface);
-    SDL_FreeSurface(surface);
-    
-    surface = IMG_Load("5.png");
-    tex[5] = SDL_CreateTextureFromSurface(renderer,surface);
-    SDL_FreeSurface(surface);
-
-    surface = IMG_Load("6.png");
-    tex[6] = SDL_CreateTextureFromSurface(renderer,surface);
-    SDL_FreeSurface(surface);
-
-
-    // surface = TTF_RenderText_Solid(font,"_",{0,0,0});
-    // SDL_Texture *under_score = SDL_CreateTextureFromSurface(renderer,surface);
-    // SDL_FreeSurface(surface);
-
-    //SDL_Rect dest[7];
-    SDL_QueryTexture(tex[0],NULL,NULL,&dest[0].w,&dest[0].h);
-
-    for (int i=0; i<7 ;i++)
-    {
-    dest[i].w=(int) dest[0].w *1;
-    dest[i].h = (int) dest[0].h *1;
-    dest[i].x= (int) 750;
-    dest[i].y = 0 ;
-    
-    }
-
-   // SDL_RenderClear(renderer); this was changed
-
-    SDL_RenderCopy(renderer,tex[0],NULL,&dest[0]);
+   
 
     surface = TTF_RenderText_Solid(font,"NEXT ROUND",{0,0,0});
 
@@ -146,11 +82,6 @@ surface = IMG_Load("background.png");
    // SDL_RenderCopy(renderer,Next_round,NULL,&next_round);
     SDL_FreeSurface(surface);
     //SDL_RenderPresent(renderer);
-
-
-    // SDL_Delay(15000);
-    // SDL_DestroyRenderer(renderer);
-    // SDL_DestroyWindow(window);
 
     return 1;
 }
