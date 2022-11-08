@@ -1,5 +1,6 @@
 //#include "initializer.h"
 #include "logic.h"
+#include "mode.h"
 int width = 1080;
 int height = 720;
 
@@ -13,7 +14,7 @@ int main ()
 {
      game_intialization("WORDS",x_pos, y_pos, width, height);
      
-     SDL_Event e;
+    
     while (game)
     {
       if (SDL_PollEvent(&e)!=0)
@@ -26,12 +27,40 @@ int main ()
          
       }
       main_render();
-       logic();
-       if (next_step())
-       {
+      if (mode()==1)
+      {
         SDL_RenderClear(renderer);
+        main_render();
+        logic_for_adult();
+         while (next_step())
+       {
+         main_render();
+         logic_for_adult();
+         SDL_RenderClear(renderer);
         //logic();
        }
+      }
+
+       else if (mode()==0)
+      {
+        SDL_RenderClear(renderer);
+        main_render();
+        logic_for_kids();
+         while (next_step())
+       {
+         main_render();
+         logic_for_kids();
+         SDL_RenderClear(renderer);
+        //logic();
+       }
+      }
+
+      else if (mode()==-1)
+      {
+        game = 0;
+        break;
+      }
+      
        
     }
         
