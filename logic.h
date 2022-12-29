@@ -17,8 +17,7 @@ int strlen(char word[])
 char sdltocharacter()
 {
 	char ch;
-	// if (character.type == SDL_KEYUP)
-	// {
+	
 		switch (e.key.keysym.sym)
 		{
 			case SDLK_a :
@@ -108,9 +107,6 @@ char sdltocharacter()
 				break;
 			  
 		}
-	//}
-
-	//printf ("%c\n",ch);
 
 	return ch;
 
@@ -134,10 +130,10 @@ int validity_check( char word[], char c, int position_array[])
 	return count;
 }
 
-bool next_step()
+int next_step()
 {
 
-	 SDL_Event mouse;
+	SDL_Event mouse;
 	int x,y;
 	while (game)
 	{
@@ -151,16 +147,20 @@ bool next_step()
 		{
 			
 			SDL_GetMouseState(&x,&y);
-			//cout<<x<<" "<<y<<endl;
+			
 		}
 			if (SDL_MOUSEBUTTONUP==mouse.type)
 			{
 				if (SDL_BUTTON_LEFT==mouse.button.button){
 				
-				//return 1;
-				if (x>=300 && x<=(300+400) && y<=(500+100) && y>=500)
+				
+				if (x>=850 && x<=(700+300) && y<=(550+100) && y>=550)
 				{
 					return 1;
+				}
+				if (x>=80 && x<=(80+200) && y<=(550+100) && y>=550)
+				{
+					return 2;
 				}
 				}
 			}
@@ -170,39 +170,75 @@ bool next_step()
 
 }
 
+
 void logic_for_adult()
 {
 	 
 	srand(time(0));
+	TTF_Init();
+	 TTF_Font *font = TTF_OpenFont("montserrat/Montserrat-Medium.otf",20);
 	FILE *fil;
+	FILE *hin;
 	fil=fopen("words","r");
 	if (fil==NULL)
 	{
 		printf("Failed\n");
 	}
+
+	hin = fopen("hints","r");
+	if (hin==NULL)
+	{
+		printf("Failed\n");
+	}
+
+
 	int word_count;
 
 	fscanf(fil,"%d",&word_count);
 
 	char words[word_count+5][100];
-
+	char hints[word_count+5][150];
 	for (int i=0;i<word_count;i++)
 	{
 		fscanf(fil,"%s",words[i]);
 	}
-  //  printf("%d",word_count);
+	for (int i=0;i<word_count;i++)
+	{
+		fscanf(hin,"%[^\n]%*c",hints[i]);
+	}
 
-	int word_pos = rand()%word_count;
 
+	int word_pos = rand() %word_count;
+	surface = TTF_RenderText_Solid(font,hints[word_pos],{0,0,0});
+
+	hinti = SDL_CreateTextureFromSurface(renderer,surface);
+
+	SDL_FreeSurface(surface);
+
+	SDL_RenderCopy(renderer,hinti,NULL,&hint);
     int dash_number = strlen(words[word_pos]);
+
+	SDL_Rect Correct_word;
+
+	Correct_word.x = 450;
+	Correct_word.y = 350;
+	Correct_word.h = 100;
+	Correct_word.w = 250;
+	SDL_Texture *Correct_word_tex = NULL;
+	
+	surface = TTF_RenderText_Solid(font,words[word_pos],{127,0,255});
+
+	Correct_word_tex = SDL_CreateTextureFromSurface(renderer,surface);
+
+	SDL_FreeSurface(surface);
+
 
     SDL_Texture *dashtex = NULL;
 
 
     SDL_Rect dash[dash_number] ;
     
-	TTF_Init();
-	 TTF_Font *font = TTF_OpenFont("montserrat/Montserrat-Medium.otf",20);
+	
 	
 	surface = TTF_RenderText_Solid(font,"_",{0,0,0});
 
@@ -217,31 +253,47 @@ void logic_for_adult()
         dash[i].x = dash_x_pos;
 		dash_x_pos += 50;
         dash[i].y = 80 ;
-        // SDL_RenderClear(renderer);
+        
         SDL_RenderCopy(renderer,under_score,NULL,&dash[i]);
-         //SDL_RenderPresent(renderer);
+        
     }
-	 surface = IMG_Load("heart.jpg");
+	surface = IMG_Load("23.png");
    
 	heart = SDL_CreateTextureFromSurface(renderer,surface);
 	SDL_FreeSurface (surface);
     
    
     SDL_QueryTexture(heart,NULL,NULL,&life[0].w,&life[0].h);
-    int life_x_pos = 800;
-    int life_width = life[0].w * .01;
-    int life_height = life[0].h *.01;
-	cout<<life_height<<" "<<life_width<<endl;
-    for (int i=0; i<5 ;i++)
-    {
-    life[i].w=(int) life_width;
-    life[i].h = (int) life_height;
-    life[i].x= life_x_pos;
-    life_x_pos+=life_width+10;
-    life[i].y = 80 ;
-     SDL_RenderCopy(renderer,heart,NULL,&life[i]);
-    }
-   SDL_RenderPresent(renderer);
+    int life_x_pos = 900;
+    int life_width = life[0].w * .04;
+    int life_height = life[0].h *.04;
+	
+    	
+	for (int i=0; i<5;i++)
+	{
+		life[i].w=(int) life_width;
+		life[i].h = (int) life_height;
+		life[i].x= life_x_pos;
+		life_x_pos+=life_width+10;
+		life[i].y = 80 ;
+		SDL_RenderCopy(renderer,heart,NULL,&life[i]);
+	}
+	
+
+	SDL_Texture *white=NULL;
+	surface = IMG_Load("24.png");
+	white= SDL_CreateTextureFromSurface(renderer,surface);
+	SDL_FreeSurface(surface);
+	
+	
+	surface = IMG_Load("22.png");
+
+	SDL_Texture *broken = SDL_CreateTextureFromSurface(renderer,surface);
+
+	SDL_FreeSurface(surface);
+
+	
+    SDL_RenderPresent(renderer);
 	
 	
 	int character_count = 0;
@@ -254,19 +306,11 @@ void logic_for_adult()
 
 	char ager_char = '9';
 
-	
-	for (int i=0;i<dash_number;i++)
-	{
-		printf ("%c",words[word_pos][i]);
-	}
-
-	printf ("\n");
-	//string s;
 	bool q=1;
-	SDL_Texture *chf;
+	
 	
 	while (q)
-	{    //character_count <=dash_number
+	{    
 		SDL_PollEvent(&e);
 		if(e.type==SDL_QUIT )
 			{
@@ -282,13 +326,17 @@ void logic_for_adult()
 		{
 			
 			char ch = sdltocharacter();
+			 
 			
 			if (ch=='\\')
 				break;
+			char buffer[5];
+			sprintf(buffer," %c",ch);
 			
-			//SDL_FreeSurface(surface);
-			surface = TTF_RenderText_Solid(font,&ch,{0,0,0});
+			surface = TTF_RenderText_Solid(font,buffer,{0,0,0});
+			SDL_Texture *chf=NULL;
 			chf = SDL_CreateTextureFromSurface(renderer,surface);
+			
     		SDL_FreeSurface(surface);
 			
 			memset(position_array,-1,sizeof position_array);
@@ -307,14 +355,16 @@ void logic_for_adult()
 				}
 				correct_ch_count++;				
 			}
-			//character_count ++;
-			else{
-			life_count++;
+
+			else
+			{
+				life_count++;
 			}
-			SDL_RenderCopy(renderer,heart,NULL,&life[life_count]);
 			
-			 SDL_RenderPresent(renderer);
-			// SDL_RenderClear(renderer);
+			SDL_RenderCopy(renderer,white,NULL,&life[6-life_count]);
+			SDL_RenderCopy(renderer,broken,NULL,&life[6-life_count]);
+			SDL_RenderPresent(renderer);
+			
 			}
 			
 			else
@@ -327,7 +377,7 @@ void logic_for_adult()
 	
 	
 	}
-   // cout<<correct_ch_count<<" "<<character_count<<endl;
+  
 	bool flag = 1;
 	for (int i=0;i<dash_number;i++)
 	{
@@ -337,19 +387,27 @@ void logic_for_adult()
 	
 	if (flag)
 	{
-		printf ("Yes\n");
-	   	
-					
+		SDL_RenderCopy(renderer,correct,NULL,&ans);
 	}
 	else
-		printf ("No\n");
+	{
+		SDL_RenderCopy(renderer,white,NULL,&life[0]);
+		SDL_RenderCopy(renderer,broken,NULL,&life[0]);
+			
+		SDL_RenderCopy(renderer,incorrect,NULL,&ans);
+	}
 
 	memset(tracking_array,-1,sizeof tracking_array);
+	SDL_RenderCopy(renderer,menuee,NULL,&menu);
+	
 	SDL_RenderCopy(renderer,Next_round,NULL,&next_round);
+
+	SDL_RenderCopy(renderer,Correct_word_tex,NULL,&Correct_word);
+	
     SDL_RenderPresent(renderer);
 	
 	
-	//goto hell;
+	
     return ;
 
 }
@@ -357,33 +415,73 @@ void logic_for_adult()
 void logic_for_kids()
 {
 	srand(time(0));
+	TTF_Init();
+	 TTF_Font *font = TTF_OpenFont("montserrat/Montserrat-Medium.otf",20);
 	FILE *fil;
+	FILE *hin;
 	fil=fopen("words","r");
 	if (fil==NULL)
 	{
 		printf("Failed\n");
 	}
+
+	hin = fopen("hints","r");
+	if (hin==NULL)
+	{
+		printf("Failed\n");
+	}
+
+
 	int word_count;
 
 	fscanf(fil,"%d",&word_count);
 
 	char words[word_count+5][100];
-
+	char hints[word_count+5][150];
 	for (int i=0;i<word_count;i++)
 	{
 		fscanf(fil,"%s",words[i]);
 	}
+	for (int i=0;i<word_count;i++)
+	{
+		fscanf(hin,"%[^\n]%*c",hints[i]);
+	}
+
 
 	int word_pos = rand() %word_count;
+	SDL_Rect Correct_word;
+
+	Correct_word.x = 450;
+	Correct_word.y = 350;
+	Correct_word.h = 100;
+	Correct_word.w = 250;
+	SDL_Texture *Correct_word_tex = NULL;
+	
+	surface = TTF_RenderText_Solid(font,words[word_pos],{127,0,255});
+
+	Correct_word_tex = SDL_CreateTextureFromSurface(renderer,surface);
+
+	SDL_FreeSurface(surface);
+
+	surface = TTF_RenderText_Solid(font,hints[word_pos],{0,0,0});
+
+	hinti = SDL_CreateTextureFromSurface(renderer,surface);
+
+	SDL_FreeSurface(surface);
+
+	SDL_RenderCopy(renderer,hinti,NULL,&hint);
+
 
 	int dash_size = strlen (words[word_pos]);
 
 	int x = rand() %dash_size;
 	int y = rand() %dash_size;
 	int z = rand () %dash_size;
-
-	//the shit starts
+	int dash_number = dash_size;
+	
 	char kids_word[dash_size];
+	int tracking_array [dash_number];
+	memset(tracking_array,-1,sizeof tracking_array);
 	for (int i=0;i<dash_size;i++)
 	{
 		if (i==x || i==y || i==z)
@@ -391,23 +489,16 @@ void logic_for_kids()
 			kids_word[i]='_';
 		}
 		else
+		{
 			kids_word[i]=words[word_pos][i];
+			tracking_array[i]=1;
+		}
 		
 	}
-	int dash_number = dash_size;
-
+	
     SDL_Texture *dashtex = NULL;
-
-
     SDL_Rect dash[dash_number] ;
     
-	TTF_Init();
-	 TTF_Font *font = TTF_OpenFont("montserrat/Montserrat-Medium.otf",20);
-	
-	// surface = TTF_RenderText_Solid(font,"_",{0,0,0});
-
-    // SDL_Texture *under_score = SDL_CreateTextureFromSurface(renderer,surface);
-    // SDL_FreeSurface(surface);
 	int dash_x_pos = 50;
 	int dash_width =  35;
     for (int i=0;i<dash_number;i++)
@@ -417,7 +508,7 @@ void logic_for_kids()
         dash[i].x = dash_x_pos;
 		dash_x_pos += 50;
         dash[i].y = 80 ;
-        // SDL_RenderClear(renderer);
+        
 		if (kids_word[i]=='_')
 		{
 			surface = TTF_RenderText_Solid(font,"_",{0,0,0});
@@ -427,58 +518,65 @@ void logic_for_kids()
 		}
 		else
 		{
-			surface = TTF_RenderText_Solid(font,&kids_word[i],{0,0,0});
+			char s[1];
+			s[0]= kids_word[i];
+			surface = TTF_RenderText_Solid(font,s,{0,0,0});
 			SDL_Texture *under_score = SDL_CreateTextureFromSurface(renderer,surface);
 			SDL_FreeSurface(surface);
 			SDL_RenderCopy(renderer,under_score,NULL,&dash[i]);
 		}
-         //SDL_RenderPresent(renderer);
+        
     }
-	surface = IMG_Load("heart.jpg");
+	surface = IMG_Load("23.png");
    
 	heart = SDL_CreateTextureFromSurface(renderer,surface);
 	SDL_FreeSurface (surface);
     
    
     SDL_QueryTexture(heart,NULL,NULL,&life[0].w,&life[0].h);
-    int life_x_pos = 800;
-    int life_width = life[0].w * .01;
-    int life_height = life[0].h *.01;
-	cout<<life_height<<" "<<life_width<<endl;
-    for (int i=0; i<5 ;i++)
-    {
-    life[i].w=(int) life_width;
-    life[i].h = (int) life_height;
-    life[i].x= life_x_pos;
-    life_x_pos+=life_width+10;
-    life[i].y = 80 ;
-     SDL_RenderCopy(renderer,heart,NULL,&life[i]);
-    }
-   SDL_RenderPresent(renderer);
+    int life_x_pos = 900;
+    int life_width = life[0].w * .04;
+    int life_height = life[0].h *.04;
+	
+
+	
+	for (int i=0; i<5;i++)
+	{
+		life[i].w=(int) life_width;
+		life[i].h = (int) life_height;
+		life[i].x= life_x_pos;
+		life_x_pos+=life_width+10;
+		life[i].y = 80 ;
+		SDL_RenderCopy(renderer,heart,NULL,&life[i]);
+	}
+	
+
+	SDL_Texture *white=NULL;
+	surface = IMG_Load("24.png");
+	white= SDL_CreateTextureFromSurface(renderer,surface);
+	SDL_FreeSurface(surface);
+
+	surface = IMG_Load("22.png");
+
+	SDL_Texture *broken = SDL_CreateTextureFromSurface(renderer,surface);
+
+	SDL_FreeSurface(surface);
+	SDL_RenderPresent(renderer);
 	
 	
 	int character_count = 0;
 	int correct_ch_count = 0;
 	int position_array[dash_number];
-	int tracking_array [dash_number];
-	memset(tracking_array,-1,sizeof tracking_array);
+	
 	int life_count = 1 ;
 
 
 	char ager_char = '9';
-
 	
-	for (int i=0;i<dash_number;i++)
-	{
-		printf ("%c",words[word_pos][i]);
-	}
-
-	printf ("\n");
-	//string s;
 	bool q=1;
 	
 	while (q)
-	{    //character_count <=dash_number
+	{   
 		SDL_PollEvent(&e);
 		if(e.type==SDL_QUIT )
 			{
@@ -497,9 +595,10 @@ void logic_for_kids()
 			
 			if (ch=='\\')
 				break;
-			//s=ch;
-			cout<<ch<<endl;
-			surface = TTF_RenderText_Solid(font,&ch,{0,0,0});
+			
+			char fh[1];
+			fh[0]=ch;
+			surface = TTF_RenderText_Solid(font,fh,{0,0,0});
 			SDL_Texture *chf = SDL_CreateTextureFromSurface(renderer,surface);
     		SDL_FreeSurface(surface);
 			
@@ -520,28 +619,30 @@ void logic_for_kids()
 				}
 				correct_ch_count++;				
 			}
-			//character_count ++;
-			else{
-			life_count++;
-			}
-			SDL_RenderCopy(renderer,heart,NULL,&life[life_count]);
 			
-			 SDL_RenderPresent(renderer);
-			// SDL_RenderClear(renderer);
+			else
+			{
+				life_count++;
 			}
-			//SDL_RenderCopy(renderer,tex[character_count],NULL,&dest[character_count]);
-			 //SDL_RenderPresent(renderer);
+			//SDL_RenderCopy(renderer,heart,NULL,&life[life_count]);
+			SDL_RenderCopy(renderer,white,NULL,&life[6-life_count]);
+			SDL_RenderCopy(renderer,broken,NULL,&life[6-life_count]);
+			SDL_RenderPresent(renderer);
+			
+			}
+			
 			else
 			{
 				q=0;
 			}
+			
 		
 		
 		}
 	
 	
 	}
-   // cout<<correct_ch_count<<" "<<character_count<<endl;
+   
 	bool flag = 1;
 	for (int i=0;i<dash_number;i++)
 	{
@@ -551,25 +652,23 @@ void logic_for_kids()
 	
 	if (flag)
 	{
-		printf ("Yes\n");
-	   	
+		SDL_RenderCopy(renderer,correct,NULL,&ans);
 					
 	}
 	else
-		printf ("No\n");
+	{
+		SDL_RenderCopy(renderer,white,NULL,&life[0]);
+		SDL_RenderCopy(renderer,broken,NULL,&life[0]);
+		SDL_RenderCopy(renderer,incorrect,NULL,&ans);
+	}
 
 	memset(tracking_array,-1,sizeof tracking_array);
 	SDL_RenderCopy(renderer,Next_round,NULL,&next_round);
+
+	SDL_RenderCopy(renderer,menuee,NULL,&menu);
+	SDL_RenderCopy(renderer,Correct_word_tex,NULL,&Correct_word);
     SDL_RenderPresent(renderer);
-	
-	
-	//goto hell;
+
     return ;
-
-
-
-	
-
-
 
 }
