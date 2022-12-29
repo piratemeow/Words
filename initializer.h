@@ -53,11 +53,11 @@ bool game_intialization(const char *title, int x_pos, int y_pos,int width, int h
         return 0;
     }
     
-   TTF_Init();
-   TTF_Font *font = TTF_OpenFont("montserrat/Montserrat-Medium.otf",20);
+    TTF_Init();
+    TTF_Font *font = TTF_OpenFont("montserrat/Montserrat-Medium.otf",20);
     
    
-surface = IMG_Load("background.png");
+    surface = IMG_Load("background.png");
     if (!surface)
     {
         printf ("ERROR SURFACING IMAGE\n");
@@ -66,22 +66,50 @@ surface = IMG_Load("background.png");
         SDL_Quit();
         return 0;
     }
-    
-    
-   
 
     surface = TTF_RenderText_Solid(font,"NEXT ROUND",{0,0,0});
 
     Next_round = SDL_CreateTextureFromSurface (renderer,surface);
 
-    next_round.w = 400;
+    next_round.w = 300;
     next_round.h = 100;
-    next_round.x = 300;
-    next_round.y = 500;
+    next_round.x = 850;
+    next_round.y = 550;
 
-   // SDL_RenderCopy(renderer,Next_round,NULL,&next_round);
+
     SDL_FreeSurface(surface);
-    //SDL_RenderPresent(renderer);
+    surface = TTF_RenderText_Solid(font,"MENU",{0,0,0});
+    menuee = SDL_CreateTextureFromSurface(renderer,surface);
+
+    menu.x = 80;
+    menu.y = 550;
+    menu.h = 100;
+    menu.w = 200;
+    
+    SDL_FreeSurface(surface);
+
+
+   
+
+    ans.x = 920;
+    ans.y = 200;
+    ans.h = 50;
+    ans.w = 200;
+
+    surface = TTF_RenderText_Solid(font,"CORRECT",{0,255,0});
+    correct = SDL_CreateTextureFromSurface(renderer,surface);
+    SDL_FreeSurface(surface);
+
+    surface = TTF_RenderText_Solid(font,"INCORRECT",{255,0,0});
+    incorrect = SDL_CreateTextureFromSurface(renderer,surface);
+
+    SDL_FreeSurface(surface);
+
+    hint.x = 50;
+    hint.y = 200;
+    hint.w = 500;
+    hint.h = 50;
+    
 
     return 1;
 }
