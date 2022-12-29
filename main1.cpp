@@ -1,8 +1,7 @@
-//#include "initializer.h"
 #include "logic.h"
 #include "mode.h"
-int width = 1080;
-int height = 720;
+int width = 1200;
+int height = 800;
 
 int x_pos = SDL_WINDOWPOS_CENTERED;
 int y_pos = SDL_WINDOWPOS_CENTERED;
@@ -26,19 +25,26 @@ int main ()
           }	
          
       }
+      hell:
       main_render();
       if (mode()==1)
       {
         SDL_RenderClear(renderer);
         main_render();
         logic_for_adult();
-         while (next_step())
+        if (next_step()==2)
+        {
+          goto hell;
+        }
+       
+         while (next_step()==1)
        {
          main_render();
          logic_for_adult();
          SDL_RenderClear(renderer);
         //logic();
        }
+        
       }
 
        else if (mode()==0)
@@ -46,7 +52,11 @@ int main ()
         SDL_RenderClear(renderer);
         main_render();
         logic_for_kids();
-         while (next_step())
+        if (next_step()==2)
+        {
+          goto hell;
+        }
+         while (next_step()==1)
        {
          main_render();
          logic_for_kids();
@@ -54,12 +64,12 @@ int main ()
         //logic();
        }
       }
-
-      else if (mode()==-1)
-      {
-        game = 0;
-        break;
-      }
+      
+      // else if (mode()==-1)
+      // {
+      //   game = 0;
+      //   break;
+      // }
       
        
     }
