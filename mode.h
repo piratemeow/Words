@@ -1,8 +1,7 @@
 
-int mode ()
+void mode_screen()
 {
-    
-    TTF_Init();
+	TTF_Init();
 	TTF_Font *font = TTF_OpenFont("montserrat/Montserrat-Medium.otf",20);
 	surface = TTF_RenderText_Solid(font,"KIDS MODE",{0,0,0});
     SDL_Texture *kids[2];
@@ -14,16 +13,16 @@ int mode ()
 	SDL_FreeSurface(surface);
     SDL_Rect kid[2];
     kid[0].w = 200;
-    kid[0].h = 100;
-    kid[0].x = 420;
+    kid[0].h = 150;
+    kid[0].x = 500;
     kid[0].y = 100;
-
+	
 	SDL_Rect quit_button;
-    quit_button.w = 200;
+    quit_button.w = 150;
     quit_button.h = 100;
-    quit_button.x = 420;
+    quit_button.x = 530;
     quit_button.y = 500;
-	SDL_RenderCopy(renderer,quit,NULL,&quit_button);
+	//SDL_RenderCopy(renderer,quit,NULL,&quit_button);
     SDL_RenderCopy(renderer,kids[0],NULL,&kid[0]);
 
 	surface = TTF_RenderText_Solid(font,"NORMAL MODE",{0,0,0});
@@ -32,12 +31,22 @@ int mode ()
     
 
 	SDL_Rect normal_button;
-	normal_button.w= 200;
-	normal_button.h = 100;
-	normal_button.x = 420;
+	normal_button.w = 220;
+	normal_button.h = 150;
+	normal_button.x = 490;
 	normal_button.y = 300;
 	SDL_RenderCopy(renderer,normal[0],NULL,&normal_button);
+	
 	SDL_RenderPresent(renderer);
+	return ;
+}
+
+
+
+int mode ()
+{
+    mode_screen();
+    
 
     SDL_Event mode;
     while (game)
@@ -53,16 +62,16 @@ int mode ()
 		{
 			
 			SDL_GetMouseState(&x,&y);
-			//cout<<x<<" "<<y<<endl;
+			
 		}
 			if (SDL_MOUSEBUTTONUP==mode.type && SDL_BUTTON_LEFT==mode.button.button)
 			{
 				
 				
 				//return 1;
-				if (x>=420 && x<=(420+200) && y<=(100+100) && y>=100)
+				if (x>=500 && x<=(500+200) && y<=(100+150) && y>=100)
 				{
-					cout<<"g\n";
+					
                     
 					return 0;
 				}
@@ -72,7 +81,7 @@ int mode ()
 					return -1;
 				}
 
-				else if (x>=420 && x<=420+200 && y<=100+300 && y>=300)
+				else if (x>=490 && x<=420+220 && y<=150+300 && y>=300)
 				{
 					return 1;
 				}
