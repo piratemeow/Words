@@ -1,125 +1,88 @@
-#include<SDL2/SDL.h>
+#include <stdio.h>
+#include <bits/stdc++.h>
+#include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_timer.h>
-#include <stdio.h>
-#include <string>
-#include <iostream>
-#include "constants.h"
-using namespace std;
-bool game_intialization(const char *title, int x_pos, int y_pos,int width, int height)
+#include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_mixer.h>
+#include "startGame.h"
+
+void initializeSDL()
 {
-    // Initializing SDL
-    if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER)!=0){
-        printf("Error");
-    }
+    // this function will initialize sdl window, renderer, ttf font and background music
 
-    if (SDL_Init(SDL_INIT_EVERYTHING)!=0)
+    SDL_Init(SDL_INIT_EVERYTHING);
+    IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG | IMG_INIT_WEBP);
+    TTF_Init();
+    Mix_OpenAudio(1500, MIX_DEFAULT_FORMAT, 2, 512);
+
+    SDL_Window *window = SDL_CreateWindow("WORDS", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1200, 800, 0); // initializing window
+
+    if (!window)
     {
-        printf("ERROR INITIALIZING SDL.\n");
-
-        return 0;
-    }
-
-    // Creating new window
-
-    //SDL_Window *window = NULL;
-    window = SDL_CreateWindow(title, x_pos, y_pos, width, height, SDL_WINDOW_SHOWN);
-    
-    // If window creating fails
-    if (window == NULL)
-    {
-        printf ("ERROR CREATEATING WINDOW\n");
+        printf("Window\n");
         SDL_Quit();
-        return 0;
+        Mix_CloseAudio();
+        TTF_Quit();
+        IMG_Quit();
+        return;
     }
-
-    // Creating renderer
 
     Uint32 render_flags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC;
-    renderer = SDL_CreateRenderer(window, -1, render_flags);
 
-    if (renderer == NULL)
-    {
-        printf("ERROR CREATING RENDERER\n");
+    SDL_Renderer *rend = SDL_CreateRenderer(window, -1, render_flags); // initialing rendered
 
-        return 0;
-    }
-
-    if (!IMG_Init(IMG_INIT_JPG || IMG_INIT_PNG))
+    if (!rend)
     {
-        printf("ERROR INITIALIZING IMAGE\n");
-        SDL_Quit();
-        IMG_Quit();
-        return 0;
-    }
-    
-    TTF_Init();
-    TTF_Font *font = TTF_OpenFont("montserrat/Montserrat-Medium.otf",20);
-    
-   
-    surface = IMG_Load("background.png");
-    if (!surface)
-    {
-        printf ("ERROR SURFACING IMAGE\n");
-        SDL_DestroyRenderer(renderer);
+        printf("Renderer\n");
         SDL_DestroyWindow(window);
         SDL_Quit();
-        return 0;
+        Mix_CloseAudio();
+        TTF_Quit();
+        IMG_Quit();
+        return;
     }
 
-    surface = TTF_RenderText_Solid(font,"NEXT ROUND",{0,0,0});
+    TTF_Font *font = TTF_OpenFont("static/Catamaran-ExtraBold.ttf", 16); // loading ttf font
 
-    Next_round = SDL_CreateTextureFromSurface (renderer,surface);
+    if (font == NULL)
+    {
+        printf("Font\n");
+        SDL_DestroyRenderer(rend);
+        SDL_DestroyWindow(window);
+        TTF_CloseFont(font);
+        SDL_Quit();
+        Mix_CloseAudio();
+        TTF_Quit();
+        IMG_Quit();
+        return;
+    }
 
-    next_round.w = 300;
-    next_round.h = 100;
-    next_round.x = 850;
-    next_round.y = 550;
+    Mix_Music *music = Mix_LoadMUS("music.mp3"); // loading background music
 
+    if (music == NULL)
+    {
+        printf("music\n");
+        SDL_DestroyRenderer(rend);
+        SDL_DestroyWindow(window);
+        SDL_Quit();
+        Mix_CloseAudio();
+        TTF_Quit();
+        IMG_Quit();
+        return;
+    }
 
-    SDL_FreeSurface(surface);
-    surface = TTF_RenderText_Solid(font,"MENU",{0,0,0});
-    menuee = SDL_CreateTextureFromSurface(renderer,surface);
+    Mix_PlayMusic(music, -1);
 
-    menu.x = 80;
-    menu.y = 550;
-    menu.h = 100;
-    menu.w = 200;
-    
-    SDL_FreeSurface(surface);
+    gameInit(window, rend, font); // initializing game loop
 
+    SDL_DestroyRenderer(rend);
+    SDL_DestroyWindow(window);
+    Mix_FreeMusic(music);
+    TTF_CloseFont(font);
 
-   
-
-    ans.x = 920;
-    ans.y = 200;
-    ans.h = 50;
-    ans.w = 200;
-
-    surface = TTF_RenderText_Solid(font,"CORRECT",{0,255,0});
-    correct = SDL_CreateTextureFromSurface(renderer,surface);
-    SDL_FreeSurface(surface);
-
-    surface = TTF_RenderText_Solid(font,"INCORRECT",{255,0,0});
-    incorrect = SDL_CreateTextureFromSurface(renderer,surface);
-
-    SDL_FreeSurface(surface);
-
-    hint.x = 50;
-    hint.y = 200;
-    hint.w = 500;
-    hint.h = 50;
-    
-
-    return 1;
-}
-
-
-void main_render()
-{
-    surface = IMG_Load("background.png");
-    back = SDL_CreateTextureFromSurface (renderer,surface);
-    SDL_FreeSurface(surface);
-    SDL_RenderCopy(renderer,back,NULL,NULL);
-    SDL_RenderPresent (renderer);
+    Mix_CloseAudio();
+    TTF_Quit();
+    IMG_Quit();
+    SDL_Quit();
 }
