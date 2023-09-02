@@ -23,4 +23,4 @@ command to run the game:
 g++ main.cpp -o main -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer && ./main
 
 
-Project Report is attached in the repository.
+The project Report is attached to the repository.
